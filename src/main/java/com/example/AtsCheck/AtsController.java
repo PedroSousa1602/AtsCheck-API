@@ -19,6 +19,8 @@ public class AtsController {
 
     @Autowired
     private ReceivePdf receivePdf;
+    @Autowired
+    private IaService iaService;
 
     @PostMapping("/analyze")
     public ResponseEntity<String> analyzeCv(@RequestParam("file") MultipartFile file) throws IOException {
@@ -29,8 +31,8 @@ public class AtsController {
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error processing file: " + e.getMessage());
         }
-        String cvText = receivePdf.receivePdf(file.getInputStream());
-        return ResponseEntity.ok(cvText);
+        String cvAnalyze = receivePdf.receivePdf(file.getInputStream());
+        return ResponseEntity.ok(iaService.analyzeCv(cvAnalyze));
     }
 
     @Autowired
@@ -42,4 +44,6 @@ public class AtsController {
         String resultText = opportunity.analyzeOpportunity(file.getInputStream(), opText);
         return ResponseEntity.ok(resultText);
     }
+
+
 }
