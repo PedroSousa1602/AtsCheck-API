@@ -16,6 +16,10 @@ public class Opportunity {
         String cvtext = "";
         try (PDDocument document = Loader.loadPDF(inputStream.readAllBytes())) {
 
+            if (document.isEncrypted()) {
+                throw new IOException("PDF CV is encrypted and cannot be read");
+            }
+
             PDFTextStripper pdfStripper = new PDFTextStripper();
             cvtext = pdfStripper.getText(document);
 
