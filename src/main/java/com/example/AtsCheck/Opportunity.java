@@ -22,9 +22,6 @@ public class Opportunity {
         } catch (IOException e) {
             throw new IOException("Error reading PDF CV", e);
         }
-
-        String jobDescription = opText;
-
-        return cvtext + " " + jobDescription;
+        return cvtext + " " + opText;
     }
 }
