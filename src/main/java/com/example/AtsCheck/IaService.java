@@ -72,4 +72,77 @@ public class IaService {
             throw new RuntimeException("Erro ao analisar o CV com a IA", e);
         }
     }
+
+    //TODO: Implementar a função analyzeCvOp para analisar o CV em relação à oportunidade de trabalho
+    //Todo: Fazer validacoes ver todos os ficheiros onde se aplica e fazer testes unitarios
+    public String analyzeCvOp(String cvText, String opText) {
+
+        try {
+
+            String systemPrompt = """
+                Tu és um especialista sénior em recrutamento e otimização de CVs para sistemas ATS (Applicant Tracking Systems).
+                A tua missão é analisar o CV fornecido em comparação com a descrição da vaga de emprego e responder EXCLUSIVAMENTE num objeto JSON válido. 
+                Não incluas nenhum texto, introdução ou explicação fora do objeto JSON.
+
+                O JSON deve seguir rigorosamente a seguinte estrutura:
+                {
+                  "pontuacaoGeral": 78,
+                  "compatibilidadeVaga": 65,
+                  "resumoExecutivo": "Resumo da adequação do candidato a esta vaga específica...",
+                  "formatacaoEEstrutura": [
+                    {
+                      "problema": "Nome do problema de formatação ou leitura",
+                      "impactoAts": "Como o ATS processa este erro",
+                      "solucao": "Como corrigir no documento"
+                    }
+                  ],
+                  "palavrasChaveFaltantes": {
+                    "tecnicas": ["requisitos da vaga ausentes no CV"],
+                    "ferramentas": ["softwares/ferramentas exigidos na vaga que faltam"],
+                    "softSkills": ["competências comportamentais da vaga que faltam"]
+                  },
+                  "requisitosAtendidos": [
+                    "Requisitos da vaga que o candidato já cumpre no CV"
+                  ],
+                  "sugestoesMetricas": [
+                    {
+                      "passagemOriginal": "Texto vago no CV",
+                      "exemploReescrito": "Sugestão reescrita a incorporar requisitos e palavras-chave da vaga"
+                    }
+                  ],
+                  "sugestaoResumo": {
+                    "antes": "Resumo atual (se existir)",
+                    "depois": "Novo resumo totalmente alinhado com o título e os requisitos da vaga"
+                  }
+                }
+
+                Garante que o JSON está perfeitamente formatado e fecha todas as aspas, chavetas e colchetes ao terminar.
+                """;
+
+            String userPrompt = String.format("""
+                --- DESCRIÇÃO DA VAGA ---
+                %s
+
+                --- CV DO CANDIDATO ---
+                %s
+                """, opText, cvText);
+
+            String fullPrompt = systemPrompt + "\n\n" + userPrompt;
+
+            var response = chatModel.call(
+                    new Prompt(
+                            fullPrompt,
+                            OpenAiChatOptions.builder()
+                                    .withModel("openai/gpt-oss-20b")
+                                    .withTemperature(0.4f)
+                                    .withMaxTokens(2500)
+                                    .build()
+                    )
+            );
+
+            return response.getResult().getOutput().getContent();
+        } catch (Exception e) {
+            throw new RuntimeException("Error analyze CV and Opportunity", e);
+        }
+    }
 }
