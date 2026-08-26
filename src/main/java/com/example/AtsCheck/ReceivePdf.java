@@ -14,6 +14,9 @@ public class ReceivePdf {
         String text = "";
         try (PDDocument document = Loader.loadPDF(inputStream.readAllBytes())) {
 
+            if (document.isEncrypted()) {
+                throw new IOException("PDF CV is encrypted and cannot be read");
+            }
             PDFTextStripper pdfStripper = new PDFTextStripper();
             text = pdfStripper.getText(document);
 
