@@ -22,7 +22,7 @@ public class AtsController {
     @Autowired
     private IaService iaService;
 
-    @PostMapping("/analyze")
+    @PostMapping("/analyzeCv")
     public ResponseEntity<String> analyzeCv(@RequestParam("file") MultipartFile file) throws IOException {
         try {
             if (file.isEmpty()) {
@@ -38,7 +38,7 @@ public class AtsController {
     @Autowired
     private Opportunity opportunity;
 
-    @PostMapping("/analyze-opportunity")
+    @PostMapping("/analyze-CVopportunity")
     public ResponseEntity<String> analyzeOpportunity(@RequestParam("file") MultipartFile file, @RequestParam("opportunityText") String opText) throws IOException {
 
         try{
@@ -48,7 +48,6 @@ public class AtsController {
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error processing file: " + e.getMessage() + " and opportunity text: " + e.getMessage());
         }
-
 
         String resultText = opportunity.analyzeOpportunity(file.getInputStream(), opText);
         return ResponseEntity.ok(iaService.analyzeCvOp(resultText, opText));
