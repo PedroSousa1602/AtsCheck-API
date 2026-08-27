@@ -32,7 +32,7 @@ public class GroqConfig {
             throw new IllegalStateException("ERRO: GROQ_API_KEY não foi encontrada no ficheiro .env nem nas variáveis de ambiente!");
         }
 
-        // Instancia o cliente apontando diretamente para o Groq
+
         OpenAiApi openAiApi = new OpenAiApi("https://api.groq.com/openai", apiKey);
         return new OpenAiChatModel(openAiApi);
     }
