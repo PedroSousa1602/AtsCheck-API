@@ -36,14 +36,6 @@ public class AtsController {
     @PostMapping(value = "/analyze-CVopportunity", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> analyzeOpportunity(@RequestParam("file") MultipartFile file, @RequestParam("opportunityText") String opText) throws IOException {
 
-//        try{
-//            if (file.isEmpty() && (opText == null || opText.isEmpty())) {
-//                return ResponseEntity.badRequest().body("File is empty and opportunity text is missing");
-//            }
-//        } catch (Exception e) {
-//            return ResponseEntity.status(500).body("Error processing file: " + e.getMessage() + " and opportunity text: " + e.getMessage());
-//        }
-
         String resultText = opportunity.analyzeOpportunity(file.getInputStream(), opText);
         return ResponseEntity.ok(iaService.analyzeCvOp(resultText, opText));
     }
