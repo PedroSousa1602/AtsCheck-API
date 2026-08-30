@@ -4,11 +4,14 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.tika.Tika;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
 
 @Service
 public class ReceivePdf {
@@ -29,22 +32,22 @@ public class ReceivePdf {
             isPdf = true;
         }
 
-        String text = "";
-        if(isPdf){
+        String cvtext = "";
+        if(isPdf) {
             try (PDDocument document = Loader.loadPDF(bufferedInput.readAllBytes())) {
-                if (document.isEncrypted()) {
+                if (document.isEncrypted() ) {
                     throw new ResponseStatusException(
                             HttpStatus.BAD_REQUEST, "PDF CV is encrypted or empty and cannot be read"
                     );
                 }
                 PDFTextStripper pdfStripper = new PDFTextStripper();
-                text = pdfStripper.getText(document);
+                cvtext = pdfStripper.getText(document);
             } catch (IOException e) {
                 throw new ResponseStatusException(
                         HttpStatus.INTERNAL_SERVER_ERROR, "Error reading PDF CV", e
                 );
             }
         }
-        return text;
+        return cvtext;
     }
 }
