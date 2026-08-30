@@ -24,13 +24,13 @@ public class AtsController {
 
     @PostMapping("/analyzeCv")
     public ResponseEntity<String> analyzeCv(@RequestParam("file") MultipartFile file) throws IOException {
-        try {
-            if (file.isEmpty()) {
-                return ResponseEntity.badRequest().body("File is empty");
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error processing file: " + e.getMessage());
-        }
+//        try {
+//            if (file.isEmpty()) {
+//                return ResponseEntity.badRequest().body("File is empty");
+//            }
+//        } catch (Exception e) {
+//            return ResponseEntity.status(500).body("Error processing file: " + e.getMessage());
+//        }
         String cvAnalyze = receivePdf.receivePdf(file.getInputStream());
         return ResponseEntity.ok(iaService.analyzeCv(cvAnalyze));
     }
