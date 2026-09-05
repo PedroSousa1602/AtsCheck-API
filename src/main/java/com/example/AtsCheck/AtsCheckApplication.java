@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class AtsCheckApplication {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 
 		try {
 			Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
@@ -15,7 +15,7 @@ public class AtsCheckApplication {
 				System.setProperty(entry.getKey(), entry.getValue());
 			});
 		} catch (Exception e) {
-
+			throw new Exception("Error loading environment variables", e);
 		}
 
 		SpringApplication.run(AtsCheckApplication.class, args);
